@@ -1,0 +1,16 @@
+{
+  "name": "fsel-auto-register",
+  "version": "1.0.0",
+  "description": "Tool tự động đăng ký tài khoản FSEL cho giáo viên",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "playwright": "^1.45.0"
+  },
+  "author": "Antigravity",
+  "license": "ISC"
+}

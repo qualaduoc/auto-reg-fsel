@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FSEL Auto Register | Công cụ đăng ký tự động dành cho Giáo viên</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Lucide Icons for premium styling -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="glass-bg"></div>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <div class="logo-icon"><i data-lucide="bot"></i></div>
+        <div class="logo-text">
+          <h1>FSEL Auto Register</h1>
+          <p>Hệ thống tự động hóa đăng ký tài khoản cho Giáo viên</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <a href="javascript:void(0)" id="btn-download-all" class="btn btn-outline">
+          <i data-lucide="download"></i> Tải danh sách Excel/CSV
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main class="main-grid">
+      <!-- Left Column: Settings Form -->
+      <section class="card settings-card">
+        <div class="card-header">
+          <i data-lucide="sliders"></i>
+          <h2>Cấu hình đăng ký</h2>
+        </div>
+        
+        <form id="register-form" class="settings-form">
+          <!-- Chế độ chạy -->
+          <div class="form-group">
+            <label for="customEmail"><i data-lucide="mail"></i> Email giáo viên cụ thể (Tùy chọn)</label>
+            <input type="email" id="customEmail" placeholder="Bỏ trống nếu muốn sinh ngẫu nhiên..." class="form-control">
+            <span class="help-text">Nhập email thật của giáo viên nếu muốn tạo bằng tài khoản của họ.</span>
+          </div>
+
+          <!-- Tỉnh thành -->
+          <div class="form-group">
+            <label for="province"><i data-lucide="map-pin"></i> Tỉnh/Thành phố đăng ký *</label>
+            <select id="province" class="form-control" required>
+              <option value="Hà Nội" selected>Hà Nội</option>
+              <option value="Hồ Chí Minh">TP. Hồ Chí Minh</option>
+              <option value="Đà Nẵng">Đà Nẵng</option>
+              <option value="Cần Thơ">Cần Thơ</option>
+              <option value="Thái Nguyên">Thái Nguyên</option>
+              <option value="Thanh Hóa">Thanh Hóa</option>
+              <option value="Nghệ An">Nghệ An</option>
+              <option value="Bắc Ninh">Bắc Ninh</option>
+              <option value="Hải Phòng">Hải Phòng</option>
+              <option value="Quảng Ninh">Quảng Ninh</option>
+              <option value="Khánh Hòa">Khánh Hòa</option>
+              <option value="Đồng Nai">Đồng Nai</option>
+              <option value="Bình Dương">Bình Dương</option>
+              <option value="Lâm Đồng">Lâm Đồng</option>
+            </select>
+            <span class="help-text">Chọn tỉnh/thành phố để load danh sách trường.</span>
+          </div>
+
+          <!-- Cấp học -->
+          <div class="form-group">
+            <label for="grade"><i data-lucide="graduation-cap"></i> Cấp học của Giáo viên *</label>
+            <select id="grade" class="form-control">
+              <option value="random" selected>Ngẫu nhiên (Random)</option>
+              <option value="mamnon">Mầm non</option>
+              <option value="tieuhoc">Tiểu học</option>
+              <option value="thcs">Trung học cơ sở (THCS)</option>
+              <option value="thpt">Trung học phổ thông (THPT)</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <!-- Số lượng -->
+            <div class="form-group col-6">
+              <label for="quantity"><i data-lucide="copy"></i> Số lượng tạo *</label>
+              <input type="number" id="quantity" min="1" max="100" value="1" class="form-control" required>
+            </div>
+
+            <!-- Chế độ Browser -->
+            <div class="form-group col-6">
+              <label for="headless"><i data-lucide="eye"></i> Hiển thị Chrome</label>
+              <select id="headless" class="form-control">
+                <option value="true" selected>Ẩn trình duyệt</option>
+                <option value="false">Hiện trình duyệt</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="btn-submit" class="btn btn-primary btn-block">
+            <i data-lucide="play-circle"></i> BẮT ĐẦU ĐĂNG KÝ
+          </button>
+        </form>
+      </section>
+
+      <!-- Right Column: Real-time Logs -->
+      <section class="card logs-card">
+        <div class="card-header">
+          <i data-lucide="terminal"></i>
+          <h2>Tiến trình hệ thống (Logs)</h2>
+          <span class="badge" id="process-badge">Đang rảnh</span>
+        </div>
+        <div class="logs-console" id="logs-console">
+          <div class="log-line system-welcome">
+            <span class="time">[--:--:--]</span>
+            <span class="msg">[AETHER] System ready. Waiting for ignition commands...</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Section: History Table -->
+    <section class="card history-card">
+      <div class="card-header">
+        <i data-lucide="history"></i>
+        <h2>Danh sách tài khoản đã tạo thành công</h2>
+        <span class="badge badge-success" id="account-count">0 tài khoản</span>
+      </div>
+      <div class="table-container">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Họ tên</th>
+              <th>Tên đăng nhập (Email)</th>
+              <th>Mật khẩu</th>
+              <th>Trường học</th>
+              <th>Thời gian tạo</th>
+              <th>Thao tác</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody">
+            <tr>
+              <td colspan="7" class="empty-state">
+                <i data-lucide="folder-open"></i>
+                <p>Chưa có tài khoản nào được đăng ký trong phiên này. Hãy tiến hành đăng ký!</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- Script JS -->
+  <script src="app.js"></script>
+</body>
+</html>

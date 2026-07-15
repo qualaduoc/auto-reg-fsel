@@ -1,0 +1,5 @@
+node_modules/
+screenshots/
+danh_sach_tai_khoan.csv
+.env
+.DS_Store
