@@ -1,7 +1,9 @@
+const path = require('path');
+process.env.PLAYWRIGHT_BROWSERS_PATH = path.join(__dirname, 'node_modules', 'playwright-browsers');
+
 const express = require('express');
 const { chromium } = require('playwright');
 const fs = require('fs');
-const path = require('path');
 const cors = require('cors');
 
 const app = express();

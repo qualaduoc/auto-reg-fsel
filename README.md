@@ -19,10 +19,10 @@ Render.com cho phép liên kết trực tiếp với GitHub để tự động t
    - **Region**: Chọn `Singapore` (để máy chủ gần Việt Nam nhất, tốc độ chạy sẽ nhanh nhất).
    - **Branch**: `main`
    - **Runtime**: Chọn **Node** (Tuyệt đối không chọn Docker).
-   - **Build Command**: Nhập lệnh sau để cài đặt code và tải trình duyệt Chromium tự động:
-     ```bash
-     npm install && npx playwright install chromium
-     ```
+    - **Build Command**: Nhập lệnh sau để cài đặt code và tải trình duyệt Chromium vào đúng thư mục node_modules (được Render tự động lưu trữ và cache):
+      ```bash
+      npm install && PLAYWRIGHT_BROWSERS_PATH=./node_modules/playwright-browsers npx playwright install chromium
+      ```
    - **Start Command**: Nhập lệnh khởi chạy server:
      ```bash
      node server.js
