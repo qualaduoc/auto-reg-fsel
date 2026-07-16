@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "FSEL LMS Auto Assistant",
+  "version": "1.0",
+  "description": "Tiện ích hỗ trợ tự động học và làm bài tập trắc nghiệm trên FSEL LMS tích hợp trí tuệ nhân tạo Gemini.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://lms.fsel.edu.vn/*",
+    "https://generativelanguage.googleapis.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://lms.fsel.edu.vn/*"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ]
+}

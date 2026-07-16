@@ -40,13 +40,53 @@ async function crawlCourseContent() {
     await page.screenshot({ path: path.join(outputDir, '02_home_dashboard.png') });
 
     console.log('URL hiện tại:', page.url());
-    if (!page.url().includes('home') && !page.url().includes('dashboard')) {
-      console.log('Nội dung trang hiện tại:\n', await page.innerText('body'));
-      throw new Error('Đăng nhập thất bại hoặc bị chặn bởi hệ thống bảo mật.');
+
+    // 4. XỬ LÝ ONBOARDING POP-UP VÀ SETUP LỘ TRÌNH (Nếu có)
+    console.log('4. Kiểm tra và vượt qua chuỗi Onboarding pop-up...');
+    const onboardingBtn = page.locator('text="Nhấn để tiếp tục"');
+    let onboardingStep = 1;
+    
+    // Vòng lặp click qua tất cả các bước slide chào mừng (tối đa 5 slide)
+    while (await onboardingBtn.isVisible() && onboardingStep <= 5) {
+      console.log(`-> Phát hiện Onboarding slide bước ${onboardingStep}. Click "Nhấn để tiếp tục"...`);
+      await onboardingBtn.click({ force: true });
+      await page.waitForTimeout(2000);
+      await page.screenshot({ path: path.join(outputDir, `02_onboarding_step_${onboardingStep}.png`) });
+      onboardingStep++;
     }
 
-    // 4. KIỂM TRA BÀI TEST ĐẦU VÀO
-    console.log('4. Kiểm tra trạng thái bài test năng lực đầu vào...');
+    // Đợi 2 giây sau khi kết thúc chuỗi onboarding để chuyển sang màn hình tiếp theo
+    await page.waitForTimeout(2000);
+
+    // Kiểm tra nút "Tiếp tục" ở màn hình kết quả Test / Setup lộ trình (như ảnh thầy gửi)
+    const continueBtn = page.locator('text="Tiếp tục"').first();
+    if (await continueBtn.isVisible()) {
+      console.log('-> Phát hiện màn hình Setup lộ trình (kết quả test Pre A1). Đang click "Tiếp tục"...');
+      await continueBtn.click({ force: true });
+      await page.waitForTimeout(2500);
+      await page.screenshot({ path: path.join(outputDir, '02_2_after_continue_1.png') });
+
+      // Click tiếp tục bước 2 (Lựa chọn khóa học)
+      const continueBtn2 = page.locator('text="Tiếp tục"').first();
+      if (await continueBtn2.isVisible()) {
+        console.log('-> Đang click "Tiếp tục" bước 2 (Lựa chọn khóa học)...');
+        await continueBtn2.click({ force: true });
+        await page.waitForTimeout(2500);
+        await page.screenshot({ path: path.join(outputDir, '02_3_after_continue_2.png') });
+
+        // Click tiếp tục bước 3 (Xây dựng lộ trình)
+        const continueBtn3 = page.locator('text="Tiếp tục"').first();
+        if (await continueBtn3.isVisible()) {
+          console.log('-> Đang click "Tiếp tục" bước 3 (Xây dựng lộ trình)...');
+          await continueBtn3.click({ force: true });
+          await page.waitForTimeout(3000);
+          await page.screenshot({ path: path.join(outputDir, '02_4_path_setup_completed.png') });
+        }
+      }
+    }
+
+    // 5. KIỂM TRA LẠI BÀI TEST ĐẦU VÀO
+    console.log('5. Kiểm tra lại xem có yêu cầu làm bài test đầu vào không...');
     const hasTestPrompt = await page.locator('text="Bài kiểm tra năng lực miễn phí"').isVisible();
     const hasStartBtn = await page.locator('button:has-text("Bắt đầu ngay")').first().isVisible();
 
@@ -65,8 +105,8 @@ async function crawlCourseContent() {
       return;
     }
 
-    // 5. TIẾN HÀNH CÀO DỮ LIỆU BÀI HỌC (Nếu đã hoàn thành bài test)
-    console.log('Tài khoản đã được kích hoạt lộ trình! Bắt đầu cào dữ liệu...');
+    // 6. TIẾN HÀNH CÀO DỮ LIỆU BÀI HỌC (Nếu đã hoàn thành bài test)
+    console.log('6. Tài khoản đã được kích hoạt lộ trình! Bắt đầu cào dữ liệu...');
     
     // Thử truy cập vào menu học tập (ví dụ chuyển hướng trực tiếp đến trang học tập của FSEL)
     // Các endpoint phổ biến của LMS: /learning, /courses, /my-courses, /class
